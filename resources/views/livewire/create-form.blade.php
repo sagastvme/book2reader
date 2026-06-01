@@ -1,10 +1,9 @@
 <div>
     <form wire:submit="create">
         {{ $this->form }}
+        <x-filament::button color="success">
+traduccion        </x-filament::button>
 
-        <button type="submit">
-            Submit
-        </button>
     </form>
 
     <x-filament-actions::modals />
