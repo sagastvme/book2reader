@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Form;
 
+use App\Livewire\Concerns\HasUniqueKeyInput;
+use App\Support\FormIcons;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
@@ -13,11 +15,12 @@ use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class CreateForm extends Component implements HasSchemas
+class UploadForm extends Component implements HasSchemas
 {
     use InteractsWithSchemas;
+    use HasUniqueKeyInput;
 
-    private string $hintIcon = 'heroicon-m-question-mark-circle';
+    private string $hintIcon = FormIcons::HINT;
 
     public ?array $data = [];
 
@@ -40,9 +43,10 @@ class CreateForm extends Component implements HasSchemas
             'application/x-rar-compressed' => 'RAR',
         ]);
 
+
         return $schema
             ->components([
-                $this->uniqueKeyInput(),
+                $this->uniqueKeyInput()->helperText('TRADUCIR: Go this this page on your Kobo/Kindle ereader and you see a unique key. Enter it in this form and upload an ebook and it will appear as a download link on the ereader.'),
                 FileUpload::make('books')->multiple()
                     ->acceptedFileTypes($allowedTypes->keys())->maxSize(50000) // 50MB
                     ->requiredWithout('url')
@@ -76,7 +80,6 @@ class CreateForm extends Component implements HasSchemas
                     ->label(__('form.transliterate'))
                     ->hintIcon($this->hintIcon, tooltip: __('form.transliterate_help')),
 
-
             ])
             ->statePath('data');
     }
@@ -89,13 +92,8 @@ class CreateForm extends Component implements HasSchemas
 
     public function render(): View
     {
-        return view('livewire.create-form');
+        return view('livewire.form.upload-form');
     }
 
-    private function uniqueKeyInput()
-    {
-        return TextInput::make('uuid')->trim()->length(4)->extraAttributes(['class' => ''])
-            ->inputMode('decimal')->placeholder('----')->label(__('form.id'))
-            ->hintIcon($this->hintIcon, tooltip: __('form.id_helper'))->autofocus()->required()->markAsRequired(false);
-    }
+
 }
