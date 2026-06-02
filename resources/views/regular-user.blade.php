@@ -1,11 +1,11 @@
 <x-layouts::app>
 
-    <div class="prose dark:prose-invert prose-gray max-w-none">
+    <div class="font-class">
         <h1>{{__('html.header.h1')}}</h1>
         <p>{{__('html.header.p')}}</p>
     </div>
 
-    @livewire('create-form')
+    @livewire('form.upload-form')
 
 
     <div x-data="{ show: true }" x-show="show">
