@@ -11,7 +11,6 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
-use JeffersonGoncalves\Filament\QrCodeField\Forms\Components\QrCodeInput;
 use Livewire\Component;
 
 class CreateForm extends Component implements HasSchemas
@@ -76,7 +75,7 @@ class CreateForm extends Component implements HasSchemas
                     ->inline()->onColor('danger')
                     ->label(__('form.transliterate'))
                     ->hintIcon($this->hintIcon, tooltip: __('form.transliterate_help')),
-                QrCodeInput::make('hola'),
+
 
             ])
             ->statePath('data');
