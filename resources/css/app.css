@@ -18,6 +18,8 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 }
-
+@utility font-class {
+    @apply prose dark:prose-invert prose-gray max-w-none;
+}
 
 @variant dark (&:where(.dark, .dark *));
