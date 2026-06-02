@@ -16,7 +16,7 @@ class DeviceIsReader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $eReaders = ['kobo', 'kindle', 'tolino', 'ereader'];
+        $eReaders = ['kobo', 'kindle', 'tolino', 'ereader', 'mozilla'];
         $agent = $request->headers->get('User-Agent');
         $isReader = Str::contains($agent, $eReaders, ignoreCase: true);
         $request->attributes->set('is_reader', $isReader);
