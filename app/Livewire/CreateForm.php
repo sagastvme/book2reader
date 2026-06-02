@@ -6,17 +6,19 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
+use JeffersonGoncalves\Filament\QrCodeField\Forms\Components\QrCodeInput;
 use Livewire\Component;
 
 class CreateForm extends Component implements HasSchemas
 {
     use InteractsWithSchemas;
+
+    private string $hintIcon = 'heroicon-m-question-mark-circle';
 
     public ?array $data = [];
 
@@ -41,17 +43,19 @@ class CreateForm extends Component implements HasSchemas
 
         return $schema
             ->components([
+                $this->uniqueKeyInput(),
                 FileUpload::make('books')->multiple()
                     ->acceptedFileTypes($allowedTypes->keys())->maxSize(50000) // 50MB
                     ->requiredWithout('url')
-                    ->label(__('form.books'))->helperText(__('form.books_help', ['formats' => $allowedTypes->values()
-                    ->implode(', ')]))->columnSpanFull(),
+                    ->label(__('form.books'))
+                    ->helperText(__('form.books_help', ['formats' => $allowedTypes->values()
+                        ->implode(', ')]))->columnSpanFull(),
 
                 TextInput::make('url')->url()->inputMode('url')->autocomplete('url')
                     ->trim()
                     ->requiredWithout('books')
-                    ->label(__('form.url'))->helperText(__('form.url_help')),
-                Fieldset::make('traduccion')->components([
+                    ->label(__('form.url'))->hintIconTooltip(__('form.url_hint'))->hintIcon($this->hintIcon, tooltip: __('form.url_help')),
+                Fieldset::make(__('form.processing'))->components([
 
                     Radio::make('process')->hiddenLabel()->options([
                         null => __('form.process.none'),
@@ -61,18 +65,18 @@ class CreateForm extends Component implements HasSchemas
                         null => __('form.process.none_desc'),
                         'kobo' => __('form.process.kobo_desc'),
                         'kindle' => __('form.process.kindle_desc'),
-                    ])->inline()->default(null),
-
+                    ])->default(null),
                 ]),
                 Toggle::make('trim_margins')
                     ->inline()->onColor('extra')
-                    ->label(__('form.trim_margins_help'))
-                    ->helperText(__('form.trim_margins_help')),
+                    ->label(__('form.trim_margins'))
+                    ->hintIcon($this->hintIcon, tooltip: __('form.trim_margins_help')),
 
                 Toggle::make('transliterate')
                     ->inline()->onColor('danger')
                     ->label(__('form.transliterate'))
-                    ->helperText(__('form.transliterate_help')),
+                    ->hintIcon($this->hintIcon, tooltip: __('form.transliterate_help')),
+                QrCodeInput::make('hola'),
 
             ])
             ->statePath('data');
@@ -80,11 +84,19 @@ class CreateForm extends Component implements HasSchemas
 
     public function create(): void
     {
+
         dd($this->form->getState());
     }
 
     public function render(): View
     {
         return view('livewire.create-form');
+    }
+
+    private function uniqueKeyInput()
+    {
+        return TextInput::make('uuid')->trim()->length(4)->extraAttributes(['class' => ''])
+            ->inputMode('decimal')->placeholder('----')->label(__('form.id'))
+            ->hintIcon($this->hintIcon, tooltip: __('form.id_helper'))->autofocus()->required()->markAsRequired(false);
     }
 }
